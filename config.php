@@ -17,8 +17,8 @@
     define('MAX_REG',10);
     define('secret_key',$_ENV['SECRET_KEY']);
     define('site_key',$_ENV['SITE_KEY']);
-    define('site_name','webmansys');
-    
+    define('site_name','Webman');
+
     //defining database variables
     $db_user = "adminui";
     $db_pass = "#J4dIg0Mn4PiJm0Ck4#";
