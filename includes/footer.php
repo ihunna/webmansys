@@ -15,7 +15,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
 <?php
             $site_key = site_key;
-            $postUrl = HOST ."/api.handledata.php";
+            $postUrl = HOST ."/api/handledata.php";
             $logoutUrl = HOST ."/logout.php";
             $track_url = HOST ."/tracking.php";
             $currentUrl = HOST ."/index.php?action=$action&sub=$subAction";
@@ -83,6 +83,7 @@
                                     data.operation = '$op';
                                     data.state = 'changed';
                                     e_d.querySelector('.save-footer').classList.add('show');
+                                    console.log( JSON.stringify(data));
                                 }).catch((error) => {
                                     console.log('Saving failed: ', error)
                                 });

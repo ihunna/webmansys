@@ -26,7 +26,12 @@
             if($rows){
                 //update visit count if already visted or insert new if not
                  stmtupdate(
-                    "UPDATE visitors SET country =?, city =?, browser=?, os_name =?, visit_count=?
+                    "UPDATE visitors 
+                    SET country =?, 
+                    city =?, 
+                    browser=?, 
+                    os_name =?, 
+                    visit_count=?,
                     WHERE ip =?",
                     [$country,$city,$browser,$os_name,$rows['visit_count']+1,$ip]);
             }else{

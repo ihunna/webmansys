@@ -17,11 +17,13 @@
     define('MAX_REG',10);
     define('secret_key',$_ENV['SECRET_KEY']);
     define('site_key',$_ENV['SITE_KEY']);
-    define('site_name','Webman');
+    define('smtp_email',$_ENV['SMTP_EMAIL']);
+    define('smtp_pass',$_ENV['SMTP_PASS']);
+    define('site_name','Webmansys');
 
     //defining database variables
     $db_user = "adminui";
-    $db_pass = "#J4dIg0Mn4PiJm0Ck4#";
+    $db_pass = $_ENV['DB_PASS'];
     $db_name = "admin_ui";
     $db_host = "localhost";
 

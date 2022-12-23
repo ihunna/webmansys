@@ -218,7 +218,7 @@
                     }else{
                         $keys = array_keys($_GET);
                         for($i=1; $i < count($links); $i++){
-                            if($keys[$i]==='user' || $keys[$i]==='page'){continue;}
+                            if($keys[$i]==='user' || $keys[$i]==='page' || $keys[$i]==='limit'){continue;}
                             echo '
                             <span> ></span>
                             <a href="index.php?';

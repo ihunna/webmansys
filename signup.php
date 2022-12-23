@@ -56,10 +56,13 @@
                                 $v_code = md5(rand());
                                 $user_id =  md5(rand());
                                 $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-                                $success = stmtinsert("INSERT INTO users (username, email, password,status,privilege,v_code,user_id) VALUES(?,?,?,?,?,?,?)",[$username,$email,$hashed_password,'active','admin',$v_code,$user_id]);
+                                $success = stmtinsert("INSERT INTO 
+                                users (username, email, password,status,privilege,v_code,user_id) 
+                                VALUES(?,?,?,?,?,?,?)",
+                                [$username,$email,$hashed_password,'active','admin',$v_code,$user_id]);
                                 
                                 if($success){
-                                echo  '<div class="successful">
+                                    echo  '<div class="successful">
                                         Account creation successful <a href="login.php">Login<a>
                                         </div>';
                                 }

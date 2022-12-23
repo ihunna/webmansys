@@ -45,7 +45,10 @@
             echo users($action,$subAction);
             break;
         default:
-            echo stats($action,$subAction);
+            echo  '<div class="alert-box" 
+                    style="text-align:center; font-weight:500; background-color:#ff3860; bottom:0">
+                    Wrong action specified
+            </div>';
             break;
     }
 

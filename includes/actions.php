@@ -95,7 +95,7 @@
 
     function galleries($action,$subAction){
         $page = (isset($_GET['page']))? $_GET['page'] : 0;
-        $num_per_page = 8;
+        $num_per_page = (isset($_GET['limit']))? $_GET['limit']:8;
         $total_imgs = count_rows(
             "SELECT COUNT(*) FROM images 
             WHERE sub_category =?",
@@ -211,7 +211,7 @@
                     Total visitors
                 </h2>
                 <h3>
-                    '.$total_visitors.'
+                    '.num_format($total_visitors).'
                 </h3>
                 <h5 class="pcent">
                     +0%

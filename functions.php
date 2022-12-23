@@ -1,6 +1,7 @@
 <?php
     require_once('config.php');
-    
+    $error = array('message' => 'none');
+
     function redirect($url) {
         header("Location:$url");
     }
@@ -189,6 +190,18 @@
         }
     }
 
+    function stmtselectSingle($query, $values){
+        try{
+            global $db;
+            $statement = $db->prepare($query);
+            $statement->execute($values);
+            $result = $statement->fetchColumn();
+            return $result;
+        }catch(PDOException $e){
+            return $e;
+        }
+    }
+
     function count_rows($query,$values){
         try{
             global $db;
@@ -227,8 +240,19 @@
             status VARCHAR(255) NOT NULL,
             privilege VARCHAR(255) NOT NULL,
             v_code VARCHAR(255) NOT NULL,
-            last_seen TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
+            v_code_exp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            last_seen TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
             reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+            )"
+        );
+    //creating access_tokens table if not exists
+    stmtcreate(
+        "CREATE TABLE IF NOT EXISTS access_tokens(
+            id INT(255) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+            token VARCHAR(255) NOT NULL,
+            user_id VARCHAR(255) UNIQUE NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            expires_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
             )"
         );
     //creating images table if not exists
@@ -262,17 +286,17 @@
         return $result;
     }
 
-    function saveText($data){
-        $success;     
+    function saveText($data,$user_id){
+         $success;     
          $cat = $data->category;
          $sub_cat = $data->sub_category;
-         $by = $_SESSION['user_id'];
+         $by = $user_id;
          $data = json_encode($data->data);
          
          $rows = count_rows(
             "SELECT COUNT(*) FROM textuals 
             WHERE uploaded_by =? 
-            AND sub_category =?",[$_SESSION['user_id'],$sub_cat]);
+            AND sub_category =?",[$by,$sub_cat]);
 
          if($rows[0]){
             $success = ($rows[1] > 0)? stmtupdate(
@@ -292,7 +316,7 @@
         return $success;
     }
 
-    function deleteText($data){
+    function deleteText($data,$user_id){
         $result = false;
         try{
             $cat = $data -> category;
@@ -309,12 +333,12 @@
         }
     }
 
-    function saveImage($data){
+    function saveImage($data,$user_id){
         $success = false;
         try{    
              $cat = $data->category;
              $sub_cat = $data->sub_category;
-             $by = $_SESSION['user_id'];
+             $by = $user_id;
              $data = $data->data;
              foreach($data as $d){
                  $folderPath = ($sub_cat == 'site-images')? img_folder .'/'. $sub_cat .'/' : img_folder .'/';
@@ -324,10 +348,10 @@
     
                  $image_parts = explode(";base64,", $img_blob);
                  $image_base64 = base64_decode($image_parts[1]);
-                 $file = $folderPath . $img_name;
+                 $file = '../' .$folderPath .$img_name;
                  $success =  file_put_contents($file, $image_base64);
                  if($success){
-                    stmtinsert("INSERT INTO images (category,sub_category,img_url,img_name,uploaded_by) 
+                    $success = stmtinsert("INSERT INTO images (category,sub_category,img_url,img_name,uploaded_by) 
                     VALUES(?,?,?,?,?)",[$cat,$sub_cat,$img_url, $img_name,$by]);
                  }
              }
@@ -356,70 +380,71 @@
             $img_blob = $data -> image_blob;
             $folderPath = ($sub_cat == 'site-images')? img_folder .'/'. $sub_cat .'/' : img_folder .'/';
             $new_url = HOST .'/' .$folderPath .$img_name;
-
-            if ($img_blob !== ''){
-                try{
-                    unlink($folderPath .$old_name);
+            
+            if(file_exists('../'.$folderPath .$old_name)){
+                if ($img_blob !== ''){
+                    $unlink = unlink('../'.$folderPath .$old_name);
                     $image_parts = explode(";base64,", $img_blob);
                     $image_base64 = base64_decode($image_parts[1]);
-                    $file = $folderPath . $img_name;
-                    file_put_contents($file, $image_base64);
-                }catch(Exception $e){
-                    return $e;
+                    $file = '../'.$folderPath . $img_name;
+                    if($unlink){
+                        $result = file_put_contents($file, $image_base64);
+                        if($result){
+                            stmtupdate(
+                                "UPDATE images 
+                                 SET img_url =?,img_name =?
+                                 WHERE img_name =?
+                                ",[$new_url,$img_name,$old_name]
+                            );
+                        }
+                    }
+                    return $result;
+                }else if($img_blob == ''){
+                    $result =  rename('../'.$folderPath .$old_name,'../'.$folderPath .$img_name);
+                    if($result){
+                        $result = stmtupdate(
+                            "UPDATE images 
+                             SET img_url =?,img_name =?
+                             WHERE img_name =?
+                            ",[$new_url,$img_name,$old_name]
+                        );
+                    }
+                    return $result;
                 }
-
-
-                $result = stmtupdate(
-                    "UPDATE images 
-                     SET img_url =?,img_name =?
-                     WHERE img_name =?
-                    ",[$new_url,$img_name,$old_name]
-                );
-                return $result;
-            }else if($img_blob == ''){
-                try{
-                    rename($folderPath .$old_name,$folderPath .$img_name);
-                }catch(Exception $e){
-                    return $e;
-                }
-                $result = stmtupdate(
-                    "UPDATE images 
-                     SET img_url =?,img_name =?
-                     WHERE img_name =?
-                    ",[$new_url,$img_name,$old_name]
-                );
-                return $result;
+            }else{
+                global $error;
+                $error['message'] = "File does not exist";
             }
         }catch(Exception $e){
             return $e;
         }
     }
 
-    function deleteImage($data){
+    function deleteImage($data,$user_id){
         try{
+            $sub_cat = $data->sub_category;
             $data = $data -> data[0];
             $img_name = $data -> image_name;
-            $folderPath = img_folder .'/';
-                try{
-                    unlink($folderPath .$img_name);
-                }catch(Exception $e){
-                    return $e;
+            $folderPath = ($sub_cat == 'site-images')? img_folder .'/'. $sub_cat .'/' : img_folder .'/';
+        
+            if(file_exists('../'.$folderPath .$img_name)){
+                $result = unlink('../'.$folderPath .$img_name);
+                if($result){
+                    $result = stmtdelete(
+                        "DELETE FROM images 
+                         WHERE img_name =?
+                        ",[$img_name]
+                    );
                 }
-
-
-                $result = stmtdelete(
-                    "DELETE FROM images 
-                     WHERE img_name =?
-                    ",[$img_name]
-                );
                 return $result;
+            }else{
+                global $error;
+                $error['message'] = "File does not exist";
+                return false;
+            }
         }catch(Exception $e){
             return $e;
         }
-    }
-
-    function send_mail($msg,$address){
-        
     }
 
     function logout(){
