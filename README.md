@@ -1,8 +1,18 @@
 # Title: WEBSITE MANAGEMENT WEBAPP
 
-#### Video Demo: <https://www.youtube.com/watch?v=YlH-jdE0VIc>
+#### Demo link: <http://52.28.221.30/account/>
 
-#### Description: In this project, I developed a website management system with which you can do the following: 1: Signup, login and recover password. 2: Upload, edit and delete your website's images. 3: Write, edit and delete your website's information such as: About-us, Our services, etc. 4: View and analyze your visitors and users statistics. 5: An API to login and query the database.
+## Description
+
+#### In this project, I developed a website management system with which you can do the following:
+
+#### 1: Signup, login and recover password.
+
+#### 2: Upload, edit and delete your website's images.
+
+#### 3: Write, edit and delete your website's information such as: About-us, Our services, etc.
+
+#### 4: View and analyze your visitors and users statistics. 5: An API to login and query the database.
 
 #### Languages includes: PHP, MYSQL (PDO), Javascript, HTML5 and CSS.
 
