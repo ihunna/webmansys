@@ -19,7 +19,7 @@
         $mail->Password   = smtp_pass;                        
         $mail->SMTPSecure = 'ssl';                              
         $mail->Port       = 465;  
-
+        
         $site_link = ($_SERVER['SERVER_NAME'] === '127.0.0.1')?$_SERVER['SERVER_NAME'] .'.com':$_SERVER['SERVER_NAME'];
       
         $mail->setFrom('noreply@'.$site_link.'', ''.site_name.' Support');           
