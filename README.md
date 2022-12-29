@@ -26,6 +26,10 @@
 
 #### in the .env file create **SECRET_KEY** variable and assign it to your google recatcha secrect_key and also on line 8 in account.settings.js replace the site_key with yours.
 
+### SMTP:
+
+#### in the .env file create **SMTP_EMAIL** and **SMTP_PASS** variable and assign it to your own details.
+
 ### Host variable:
 
 #### The **HOST** varible in config.php holds the root domain of the machine, replace it to match yours.
