@@ -124,11 +124,11 @@
 
 ### Login
 
-#### To login, first you have to create an account on the webpage then provide the email and password as a json data e.g {"email":"johndoe@example.com","password":"testing12345"}, send a post request to http://thedomain.com/account/api/login and you'll get a token (_the token expires in 48hours_). Example response const data = {"success":true,"message":"Login successful","access_token":"ac9e4fd897999fa3419bec77718de76c"}. With the Access Token, you can perform crud operations.
+#### To login, first you have to create an account on the webpage then provide the email and password as a json data e.g {"email":"johndoe@example.com","password":"testing12345"}, send a post request to http://52.28.221.30//account/api/login and you'll get a token (_the token expires in 48hours_). Example response const data = {"success":true,"message":"Login successful","access_token":"ac9e4fd897999fa3419bec77718de76c"}. With the Access Token, you can perform crud operations.
 
 ### Crud operations
 
-#### This access is to logged in users only. For this, you'll have to send a **_Post_** request to http://thedomain.com/account/handledata.php
+#### This access is to logged in users only. For this, you'll have to send a **_Post_** request to http://52.28.221.30//account/handledata.php
 
 #### Headers: for this operation to be successful, you'll have to set a header with the access token as the Authorisation, e.g const HEADERS = {"Content-Type": "application/json","Authorisation": "Bearer a3f714e812578a46d97f703ed2a99b59"}.
 
@@ -142,8 +142,8 @@
 
 #### **Text data**: const data = {"data": to be specified,"origin": "api_req","type": "textual","category":"about/services","sub_category": "to be specified","operation": "to be specified","state": "changed"}
 
-### Getting data: to get data, send a **Get** request to http://thedomain.com/account/api/readdata.php, specifying the **_action_**, **_sub action_**, **_page_** and **_limit_**.
+### Getting data: to get data, send a **Get** request to http://52.28.221.30//account/api/readdata.php, specifying the **_action_**, **_sub action_**, **_page_** and **_limit_**.
 
-#### **e.g request**: http://thedomain.com/account/api/readdata.php?action=galleries&sub=site-images&page=0&limit=4,
+#### **e.g request**: http://52.28.221.30//account/api/readdata.php?action=galleries&sub=site-images&page=0&limit=4,
 
 #### **e.g response**: {'success': True, 'page': '0', 'limit': '4', 'total_data_count': 12, 'data_count': 4, 'data': [{'img_url': 'http://127.0.0.1/backend/account/images/site-images/favicon-sm.ico'}, {'img_url': 'http://127.0.0.1/backend/account/images/site-images/favicon-lg.ico'}, {'img_url': 'http://127.0.0.1/backend/account/images/site-images/23891556799905703.png'}, {'img_url': 'http://127.0.0.1/backend/account/images/site-images/youtube-circle-black.png'}]}
