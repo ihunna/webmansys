@@ -124,7 +124,7 @@
 
 ### Login
 
-#### To login, first you have to create an account on the webpage then provide the email and password as a json data e.g {"email":"johndoe@example.com","password":"testing12345"}, send a post request to http://52.28.221.30/account/api/login and you'll get a token (_the token expires in 48hours_). Example response const data = {"success":true,"message":"Login successful","access_token":"ac9e4fd897999fa3419bec77718de76c"}. With the Access Token, you can perform crud operations.
+#### To login, first you have to create an account on the webpage then provide the email and password as a json data e.g {"email":"johndoe@example.com","password":"testing12345"}, send a post request to http://52.28.221.30/account/api/login.php and you'll get a token (_the token expires in 48hours_). Example response const data = {"success":true,"message":"Login successful","access_token":"ac9e4fd897999fa3419bec77718de76c"}. With the Access Token, you can perform crud operations.
 
 ### Crud operations
 
