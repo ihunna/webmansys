@@ -19,7 +19,7 @@
     define('site_key',$_ENV['SITE_KEY']);
     define('smtp_email',$_ENV['SMTP_EMAIL']);
     define('smtp_pass',$_ENV['SMTP_PASS']);
-    define('site_name','Webmansys');
+    define('site_name','Webman');
 
     //defining database variables
     $db_user = "adminui";
